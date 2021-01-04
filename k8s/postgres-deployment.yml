@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
+      containers:
+        - name: postgres
+          image: postgres 
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage # should same as volume name in the claim
+              mountPath: /var/lib/postgresql/data #postgres's default location
+              subPath: postgres #creating a sub folder inside the mount path. everything will practically be saved here. this is because of a weird default behavior that postgres has. 
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD

@@ -9,7 +9,7 @@ before_install:
   -in multi-k8s-300720-a4b290694966.json.enc -out multi-k8s-300720-a4b290694966.json
   -d
 - curl https://sdk.cloud.google.com | bash > /dev/null;
-- source $HOME-google-cloud-sdk/path.bash.inc
+- source $HOME/google-cloud-sdk/path.bash.inc
 - gcloud components update kubectl
 - gcloud auth activate-service-account --key-file multi-k8s-300720-a4b290694966.json
 - gcloud config set project multi-k8s-300720

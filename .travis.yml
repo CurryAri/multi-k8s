@@ -20,7 +20,6 @@ before_install:
 script:
 - docker run -e CI=true curryari/react-test npm test
 deploy:
-# we need to write our own script because there is no builtin kubernetes provider
   provider: script
   script: bash ./deploy.sh
   on:

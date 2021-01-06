@@ -1,6 +1,6 @@
 docker build -t curryari/multi-client:latest -t curryari/multi-client:$SHA -f ./client/Dockerfile ./client
 docker build -t curryari/multi-server:latest -t curryari/multi-server:$SHA -f ./server/Dockerfile ./server
-docker build -t curryari/multi-worker:latest -t curryari/multi-worket:$SHA -f ./worker/Dockerfile ./worker
+docker build -t curryari/multi-worker:latest -t curryari/multi-worker:$SHA -f ./worker/Dockerfile ./worker
 
 docker push curryari/multi-client:latest
 docker push curryari/multi-server:latest

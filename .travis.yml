@@ -1,0 +1,27 @@
+services:
+  - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+  - openssl aes-256-cbc -K $encrypted_15806ea88e4c_key -iv $encrypted_15806ea88e4c_iv -in multi-k8s-300720-a4b290694966.json.enc -out multi-k8s-300720-a4b290694966.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME-google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file multi-k8s-300720-a4b290694966.json
+  - gcloud config set project multi-k8s-300720
+  - gcloud config set compute/zone europe-west6-b
+  - gcloud container clusters get-credentials multi-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t curryari/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true curryari/react-test npm test
+
+deploy:
+  # to deploy kubernetes we need to write our custom script. because theres no builtin provider for it
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
